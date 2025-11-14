@@ -1,98 +1,255 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="az">
 <head>
-<meta charset="UTF-8">
-<title>Mikayilov Crypto</title>
-<style>
-    body { font-family: Arial; max-width: 700px; margin: 40px auto; }
-    textarea { width: 100%; min-height: 120px; }
-    input, button { padding: 10px; margin: 5px 0; width: 100%; }
-    .box { border: 1px solid #ccc; padding: 20px; margin-bottom: 20px; border-radius: 10px; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mikayilov Crypto — Şifrələyici</title>
+  <style>
+    :root{
+      --bg1:#0f172a; --bg2:#0b1020; --card:#0f172a;
+      --accent1:#7c3aed; --accent2:#06b6d4; --accent3:#f97316;
+      --glass: rgba(255,255,255,0.04);
+      --muted: rgba(255,255,255,0.7);
+      color-scheme: dark;
+    }
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
+    body{
+      background: radial-gradient(1200px 600px at 10% 0%, rgba(124,58,237,0.12), transparent),
+                  radial-gradient(900px 450px at 90% 100%, rgba(6,182,212,0.08), transparent),
+                  linear-gradient(180deg,var(--bg1), var(--bg2));
+      display:flex;align-items:center;justify-content:center;padding:48px 16px;
+    }
+    .wrap{width:100%;max-width:1100px;}
+
+    header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo .mark{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(12,11,27,0.6)}
+    .logo h1{margin:0;font-size:20px;color:white}
+    .logo p{margin:0;font-size:12px;color:var(--muted)}
+
+    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}
+
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:14px;box-shadow:0 8px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
+
+    h2{margin:0 0 12px 0}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+
+    textarea{width:100%;min-height:140px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;padding:12px;color:#fff;resize:vertical}
+    input[type=password], input[type=text]{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#fff}
+    .row{display:flex;gap:10px}
+    .row .col{flex:1}
+    button{cursor:pointer;padding:10px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;font-weight:600}
+    .muted{font-size:13px;color:var(--muted)}
+
+    .side .stat{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;background:linear-gradient(90deg,rgba(255,255,255,0.02),transparent)}
+    .stat .n{font-size:18px;font-weight:700}
+
+    .actions{display:flex;gap:8px;margin-top:10px}
+
+    .filedrop{border:2px dashed rgba(255,255,255,0.05);padding:18px;border-radius:10px;text-align:center;color:var(--muted);min-height:90px;display:flex;align-items:center;justify-content:center}
+
+    .small{font-size:12px;color:var(--muted)}
+
+    footer{margin-top:16px;text-align:center;color:var(--muted);font-size:13px}
+
+    /* responsive */
+    @media (max-width:900px){.grid{grid-template-columns:1fr}.logo h1{font-size:16px}}
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <header>
+      <div class="logo">
+        <div class="mark">🔐</div>
+        <div>
+          <h1>Mikayilov Crypto</h1>
+          <p>Client-side end-to-end şifrələmə — GitHub Pages üçün</p>
+        </div>
+      </div>
+    </header>
 
-<h2>🔐 Mikayilov Crypto – Şifrələ / Açarla Aç</h2>
+    <div class="grid">
+      <section class="card main">
+        <h2>Şifrələmə / Deşifrələmə</h2>
+        <p class="muted">Açar yalnız sən tərəfdə qalır. Heç bir məlumat serverə getmir.</p>
 
-<div class="box">
-    <h3>Şifrələ</h3>
-    <textarea id="plain" placeholder="Şifrələnəcək mətn..."></textarea>
-    <input id="key1" type="password" placeholder="Açar...">
-    <button onclick="encrypt()">Şifrələ</button>
-    <textarea id="cipher" placeholder="Şifrələnmiş mətn..." readonly></textarea>
-</div>
+        <label>Şifrələnəcək mətn</label>
+        <textarea id="plaintext" placeholder="Buraya mətn yaz və ya fayl yüklə..."></textarea>
 
-<div class="box">
-    <h3>Deşifrələ</h3>
-    <textarea id="cipher2" placeholder="Şifrələnmiş mətn..."></textarea>
-    <input id="key2" type="password" placeholder="Açar...">
-    <button onclick="decrypt()">Aç</button>
-    <textarea id="plain2" placeholder="Açılmış mətn..." readonly></textarea>
-</div>
+        <div style="height:10px"></div>
 
-<script>
-async function getKey(password) {
+        <div class="row">
+          <div class="col">
+            <label>Açar</label>
+            <input id="password" type="password" placeholder="Güclü bir açar yazın...">
+          </div>
+          <div style="width:120px;display:flex;flex-direction:column;justify-content:flex-end;gap:8px">
+            <button id="genKey">Açar yarat</button>
+            <button id="copyKey" style="background:linear-gradient(90deg,var(--accent3),var(--accent2))">Kopyala</button>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="encBtn">Şifrələ</button>
+          <button id="decBtn" style="background:linear-gradient(90deg,var(--accent2),var(--accent1))">Aç</button>
+          <button id="clearBtn" style="background:transparent;border:1px solid rgba(255,255,255,0.06)">Təmizlə</button>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <label>Çıxış (Base64)</label>
+        <textarea id="output" readonly placeholder="Şifrələnmiş məlumat burada görünəcək..."></textarea>
+
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="copyCipher">Kopyala</button>
+          <button id="downloadCipher">Yüklə (fayl)</button>
+        </div>
+
+        <hr style="margin:16px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)">
+
+        <label>Fayl ilə işləmə</label>
+        <div class="filedrop" id="filedrop">Faylı buraya sürüşdür və ya kliklə</div>
+        <input id="fileInput" type="file" style="display:none">
+
+      </section>
+
+      <aside class="card side">
+        <h3>Tez göstəricilər</h3>
+        <div style="height:10px"></div>
+        <div class="stat"><div class="n">🔒</div><div><div class="muted">Algoritm</div><strong>AES-GCM (256)</strong></div></div>
+        <div style="height:8px"></div>
+        <div class="stat"><div class="n">🧩</div><div><div class="muted">Açar derivatı</div><strong>PBKDF2 (500k it.)</strong></div></div>
+        <div style="height:8px"></div>
+        <div class="stat"><div class="n">📄</div><div><div class="muted">Fayl dəstəyi</div><strong>Bütün tipli faylları şifrələ</strong></div></div>
+
+        <div style="height:14px"></div>
+        <div class="muted">Qısa təlimat</div>
+        <ol class="small">
+          <li>A yazır — mətn və ya faylı şifrələyir və çıxışı B-yə göndərir.</li>
+          <li>B yalnız açarı bilirsə məlumatı aça bilər.</li>
+          <li>Açarı heç bir yerdə saxlamayın (məsələn GitHub repo).</li>
+        </ol>
+
+        <div style="height:12px"></div>
+        <div class="muted">Yardım</div>
+        <p class="small">Əlavə funksiyalar istəyirsən? Mən `crypto.js` və ya ayrıca `styles.css` verə bilərəm.</p>
+      </aside>
+    </div>
+
+    <footer class="card" style="margin-top:18px;">
+      <div class="small">© Mikayilov Crypto — client-side end-to-end. GitHub Pages üçün hazır.</div>
+    </footer>
+  </div>
+
+  <script>
+  // Helpers: base64 for Uint8Array
+  function u8ToBase64(u8){return btoa(String.fromCharCode(...u8));}
+  function base64ToU8(b64){return Uint8Array.from(atob(b64), c=>c.charCodeAt(0));}
+
+  async function getKeyFromPassword(password){
     const enc = new TextEncoder();
-    const keyMaterial = await crypto.subtle.importKey(
-        "raw", enc.encode(password), {name: "PBKDF2"}, false, ["deriveKey"]
-    );
+    const pwKey = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
     return crypto.subtle.deriveKey(
-        {
-            name: "PBKDF2",
-            salt: enc.encode("mikayilov-salt"),
-            iterations: 500000,
-            hash: "SHA-256"
-        },
-        keyMaterial,
-        { name: "AES-GCM", length: 256},
-        false,
-        ["encrypt", "decrypt"]
+      {name:'PBKDF2', salt: enc.encode('mikayilov-salt-v1'), iterations:500000, hash:'SHA-256'},
+      pwKey,
+      {name:'AES-GCM', length:256},
+      false,
+      ['encrypt','decrypt']
     );
-}
+  }
 
-async function encrypt() {
-    const text = document.getElementById("plain").value;
-    const password = document.getElementById("key1").value;
-
-    const key = await getKey(password);
+  async function encryptData(plainU8, password){
+    const key = await getKeyFromPassword(password);
     const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, plainU8);
+    const combo = new Uint8Array(iv.byteLength + ct.byteLength);
+    combo.set(iv,0); combo.set(new Uint8Array(ct), iv.byteLength);
+    return u8ToBase64(combo);
+  }
 
-    const enc = new TextEncoder();
-    const encrypted = await crypto.subtle.encrypt(
-        { name: "AES-GCM", iv },
-        key,
-        enc.encode(text)
-    );
+  async function decryptData(b64, password){
+    const data = base64ToU8(b64);
+    const iv = data.slice(0,12);
+    const ct = data.slice(12);
+    const key = await getKeyFromPassword(password);
+    const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv}, key, ct);
+    return new Uint8Array(pt);
+  }
 
-    const data = new Uint8Array([...iv, ...new Uint8Array(encrypted)]);
-    document.getElementById("cipher").value = btoa(String.fromCharCode(...data));
-}
+  // UI wiring
+  const plaintext = document.getElementById('plaintext');
+  const password = document.getElementById('password');
+  const output = document.getElementById('output');
+  const encBtn = document.getElementById('encBtn');
+  const decBtn = document.getElementById('decBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const genKey = document.getElementById('genKey');
+  const copyKey = document.getElementById('copyKey');
+  const copyCipher = document.getElementById('copyCipher');
+  const downloadCipher = document.getElementById('downloadCipher');
+  const filedrop = document.getElementById('filedrop');
+  const fileInput = document.getElementById('fileInput');
 
-async function decrypt() {
-    try {
-        const encryptedBase64 = document.getElementById("cipher2").value;
-        const password = document.getElementById("key2").value;
+  genKey.addEventListener('click', ()=>{
+    // generate 24-byte random key and show as base64-like (url safe)
+    const arr = crypto.getRandomValues(new Uint8Array(18));
+    const s = Array.from(arr).map(b=>('0'+b.toString(16)).slice(-2)).join('');
+    password.value = s;
+  });
+  copyKey.addEventListener('click', async ()=>{ if(password.value.length) await navigator.clipboard.writeText(password.value); });
 
-        const data = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
-        const iv = data.slice(0, 12);
-        const ciphertext = data.slice(12);
+  encBtn.addEventListener('click', async ()=>{
+    try{
+      const text = plaintext.value;
+      if(!text){alert('Mətn boşdur və ya fayl yükləyin.');return}
+      if(!password.value){alert('Açar boşdur.');return}
+      const u8 = new TextEncoder().encode(text);
+      const cipher = await encryptData(u8, password.value);
+      output.value = cipher;
+    }catch(e){console.error(e);alert('Şifrələmə zamanı xəta: '+(e.message||e))}
+  });
 
-        const key = await getKey(password);
-        const decrypted = await crypto.subtle.decrypt(
-            { name: "AES-GCM", iv },
-            key,
-            ciphertext
-        );
+  decBtn.addEventListener('click', async ()=>{
+    try{
+      const cipher = output.value || plaintext.value;
+      if(!cipher){alert('Şifrələnmiş mətn daxil edin.');return}
+      if(!password.value){alert('Açar boşdur.');return}
+      const plainU8 = await decryptData(cipher, password.value);
+      plaintext.value = new TextDecoder().decode(plainU8);
+      output.value = cipher;
+    }catch(e){console.error(e);alert('Açar səhvdir və ya məlumat zədəlidir.')}
+  });
 
-        const dec = new TextDecoder();
-        document.getElementById("plain2").value = dec.decode(decrypted);
-    } catch (e) {
-        document.getElementById("plain2").value = "❌ Açar səhvdir və ya məlumat zədəlidir.";
-    }
-}
-</script>
+  clearBtn.addEventListener('click', ()=>{plaintext.value='';password.value='';output.value='';});
 
+  copyCipher.addEventListener('click', async ()=>{ if(output.value) await navigator.clipboard.writeText(output.value); });
+
+  downloadCipher.addEventListener('click', ()=>{
+    if(!output.value){alert('Şifrələnmiş məlumat yoxdur.');return}
+    const blob = new Blob([output.value], {type:'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'mikayilov_cipher.txt'; a.click(); URL.revokeObjectURL(url);
+  });
+
+  // file drop
+  filedrop.addEventListener('click', ()=>fileInput.click());
+  filedrop.addEventListener('dragover', e=>{e.preventDefault(); filedrop.style.borderColor='rgba(255,255,255,0.18)'});
+  filedrop.addEventListener('dragleave', e=>{filedrop.style.borderColor='rgba(255,255,255,0.05)'});
+  filedrop.addEventListener('drop', e=>{e.preventDefault(); filedrop.style.borderColor='rgba(255,255,255,0.05)'; handleFile(e.dataTransfer.files[0]);});
+  fileInput.addEventListener('change', ()=>{ if(fileInput.files.length) handleFile(fileInput.files[0]);});
+
+  function handleFile(file){
+    const reader = new FileReader();
+    reader.onload = async ()=>{
+      const arr = new Uint8Array(reader.result);
+      // store file as base64 then encrypt
+      const cipher = await encryptData(arr, password.value || prompt('Açar daxil edin (fayl üçün):'));
+      output.value = cipher;
+      alert('Fayl şifrələndi. Çıxışı kopyalayın və ya yükləyin.');
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  </script>
 </body>
 </html>
-
-
